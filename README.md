@@ -131,24 +131,15 @@ We'll create three user groups (buckets) and assign users to them.
 Create a file named `01_base.ldif` inside the `ldif` folder:
 
 ```
-dn: dc=test,dc=redhat,dc=com
-objectClass: top
-objectClass: domain
-dc: test
-
-dn: ou=Users,dc=test,dc=redhat,dc=com
-objectClass: organizationalUnit
-ou: Users
-
-dn: ou=Bucket1,ou=Users,dc=test,dc=redhat,dc=com
+dn: ou=Bucket1,ou=users,dc=test,dc=redhat,dc=com
 objectClass: organizationalUnit
 ou: Bucket1
 
-dn: ou=Bucket2,ou=Users,dc=test,dc=redhat,dc=com
+dn: ou=Bucket2,ou=users,dc=test,dc=redhat,dc=com
 objectClass: organizationalUnit
 ou: Bucket2
 
-dn: ou=Bucket3,ou=Users,dc=test,dc=redhat,dc=com
+dn: ou=Bucket3,ou=users,dc=test,dc=redhat,dc=com
 objectClass: organizationalUnit
 ou: Bucket3
 ```
@@ -161,7 +152,7 @@ Create a file named `02_users.ldif`:
 
 ```
 # Bucket 1 Users
-dn: uid=user1,ou=Bucket1,ou=Users,dc=test,dc=redhat,dc=com
+dn: uid=user1,ou=Bucket1,ou=users,dc=test,dc=redhat,dc=com
 objectClass: inetOrgPerson
 objectClass: posixAccount
 cn: User One
@@ -172,7 +163,7 @@ gidNumber: 1001
 homeDirectory: /home/user1
 userPassword: {SSHA}hUO/oDoFjJydEhTkXp3XK3dL6rc=
 
-dn: uid=user2,ou=Bucket1,ou=Users,dc=test,dc=redhat,dc=com
+dn: uid=user2,ou=Bucket1,ou=users,dc=test,dc=redhat,dc=com
 objectClass: inetOrgPerson
 objectClass: posixAccount
 cn: User Two
@@ -184,7 +175,7 @@ homeDirectory: /home/user2
 userPassword: {SSHA}hUO/oDoFjJydEhTkXp3XK3dL6rc=
 
 # Bucket 2 Users
-dn: uid=user3,ou=Bucket2,ou=Users,dc=test,dc=redhat,dc=com
+dn: uid=user3,ou=Bucket2,ou=users,dc=test,dc=redhat,dc=com
 objectClass: inetOrgPerson
 objectClass: posixAccount
 cn: User Three
@@ -195,7 +186,7 @@ gidNumber: 2001
 homeDirectory: /home/user3
 userPassword: {SSHA}hUO/oDoFjJydEhTkXp3XK3dL6rc=
 
-dn: uid=user4,ou=Bucket2,ou=Users,dc=test,dc=redhat,dc=com
+dn: uid=user4,ou=Bucket2,ou=users,dc=test,dc=redhat,dc=com
 objectClass: inetOrgPerson
 objectClass: posixAccount
 cn: User Four
@@ -207,7 +198,7 @@ homeDirectory: /home/user4
 userPassword: {SSHA}hUO/oDoFjJydEhTkXp3XK3dL6rc=
 
 # Bucket 3 Users
-dn: uid=user5,ou=Bucket3,ou=Users,dc=test,dc=redhat,dc=com
+dn: uid=user5,ou=Bucket3,ou=users,dc=test,dc=redhat,dc=com
 objectClass: inetOrgPerson
 objectClass: posixAccount
 cn: User Five
@@ -218,7 +209,7 @@ gidNumber: 3001
 homeDirectory: /home/user5
 userPassword: {SSHA}hUO/oDoFjJydEhTkXp3XK3dL6rc=
 
-dn: uid=user6,ou=Bucket3,ou=Users,dc=test,dc=redhat,dc=com
+dn: uid=user6,ou=Bucket3,ou=users,dc=test,dc=redhat,dc=com
 objectClass: inetOrgPerson
 objectClass: posixAccount
 cn: User Six
@@ -237,8 +228,8 @@ userPassword: {SSHA}hUO/oDoFjJydEhTkXp3XK3dL6rc=
 After starting the container, run:
 
 ```bash
-podman exec -it openldap ldapadd -x -D "cn=admin,dc=test,dc=redhat,dc=com" -w adminpassword -f /ldif/01_base.ldif
-podman exec -it openldap ldapadd -x -D "cn=admin,dc=test,dc=redhat,dc=com" -w adminpassword -f /ldif/02_users.ldif
+podman exec -it openldap ldapadd -x -H ldap://127.0.0.1:1389 -D "cn=admin,dc=test,dc=redhat,dc=com" -w adminpassword -f /ldif/01_base.ldif
+podman exec -it openldap ldapadd -x -H ldap://127.0.0.1:1389 -D "cn=admin,dc=test,dc=redhat,dc=com" -w adminpassword -f /ldif/02_users.ldif
 ```
 
 ---
@@ -248,13 +239,13 @@ podman exec -it openldap ldapadd -x -D "cn=admin,dc=test,dc=redhat,dc=com" -w ad
 Run an LDAP search to verify the users:
 
 ```bash
-ldapsearch -x -H ldap://localhost -b "ou=Users,dc=test,dc=redhat,dc=com" -D "cn=admin,dc=test,dc=redhat,dc=com" -w adminpassword
+podman exec -it openldap ldapsearch -x -H ldap://127.0.0.1:1389 -b "ou=users,dc=test,dc=redhat,dc=com" -D "cn=admin,dc=test,dc=redhat,dc=com" -w adminpassword
 ```
 
 To filter by a specific bucket:
 
 ```bash
-ldapsearch -x -H ldap://localhost -b "ou=Bucket1,ou=Users,dc=test,dc=redhat,dc=com" -D "cn=admin,dc=test,dc=redhat,dc=com" -w adminpassword
+podman exec -it openldap ldapsearch -x -H ldap://127.0.0.1:1389 -b "ou=Bucket1,ou=users,dc=test,dc=redhat,dc=com" -D "cn=admin,dc=test,dc=redhat,dc=com" -w adminpassword
 ```
 
 ---
@@ -271,14 +262,14 @@ AUTH_LDAP_SERVER_URI = "ldap://localhost"
 
 # Define multiple search filters for different buckets
 AUTH_LDAP_USER_SEARCH = LDAPSearchUnion(
-    LDAPSearch("ou=Bucket1,ou=Users,dc=test,dc=redhat,dc=com", ldap.SCOPE_SUBTREE, "(uid=%(user)s)"),
-    LDAPSearch("ou=Bucket2,ou=Users,dc=test,dc=redhat,dc=com", ldap.SCOPE_SUBTREE, "(uid=%(user)s)"),
-    LDAPSearch("ou=Bucket3,ou=Users,dc=test,dc=redhat,dc=com", ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
+    LDAPSearch("ou=Bucket1,ou=users,dc=test,dc=redhat,dc=com", ldap.SCOPE_SUBTREE, "(uid=%(user)s)"),
+    LDAPSearch("ou=Bucket2,ou=users,dc=test,dc=redhat,dc=com", ldap.SCOPE_SUBTREE, "(uid=%(user)s)"),
+    LDAPSearch("ou=Bucket3,ou=users,dc=test,dc=redhat,dc=com", ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
 )
 
 AUTH_LDAP_BIND_DN = "cn=admin,dc=test,dc=redhat,dc=com"
 AUTH_LDAP_BIND_PASSWORD = "adminpassword"
-AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,ou=Users,dc=test,dc=redhat,dc=com"
+AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,ou=users,dc=test,dc=redhat,dc=com"
 
 # Enable user creation
 AUTH_LDAP_USER_ATTR_MAP = {
