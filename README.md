@@ -21,9 +21,9 @@ podman system migrate
 ```
 
 
-## 1. Docker Compose File
+## 1. Podman Compose File
 
-This `docker-compose.yml` will spin up an OpenLDAP server with `dc=test,dc=redhat,dc=com`:
+This `podman-compose.yml` will spin up an OpenLDAP server with `dc=test,dc=redhat,dc=com`:
 
 ```yml
 version: '3.8'
@@ -237,8 +237,8 @@ userPassword: {SSHA}hUO/oDoFjJydEhTkXp3XK3dL6rc=
 After starting the container, run:
 
 ```bash
-docker exec -it openldap ldapadd -x -D "cn=admin,dc=test,dc=redhat,dc=com" -w adminpassword -f /ldif/01_base.ldif
-docker exec -it openldap ldapadd -x -D "cn=admin,dc=test,dc=redhat,dc=com" -w adminpassword -f /ldif/02_users.ldif
+podman exec -it openldap ldapadd -x -D "cn=admin,dc=test,dc=redhat,dc=com" -w adminpassword -f /ldif/01_base.ldif
+podman exec -it openldap ldapadd -x -D "cn=admin,dc=test,dc=redhat,dc=com" -w adminpassword -f /ldif/02_users.ldif
 ```
 
 ---
