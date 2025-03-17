@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  openldap:
+    image: bitnami/openldap:latest
+    container_name: openldap
+    restart: always
+    environment:
+      - LDAP_ADMIN_USERNAME=admin
+      - LDAP_ADMIN_PASSWORD=adminpassword
+      - LDAP_ROOT=dc=test,dc=redhat,dc=com
+      - LDAP_ORGANIZATION=Test Organization
+      - LDAP_ALLOW_ANON_BINDING=yes
+    ports:
+      - "389:1389"
+      - "636:1636"
+    volumes:
+      - ./ldif:/ldif  # Mount local directory to container for LDIF files
+      - openldap_data:/bitnami/openldap
+    security_opt:
+      - label=disable  # Needed for SELinux systems
+
+volumes:
+  openldap_data:

@@ -1,0 +1,68 @@
+# Bucket 1 Users
+dn: uid=user1,ou=Bucket1,ou=Users,dc=test,dc=redhat,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+cn: User One
+sn: One
+uid: user1
+uidNumber: 1001
+gidNumber: 1001
+homeDirectory: /home/user1
+userPassword: {SSHA}hUO/oDoFjJydEhTkXp3XK3dL6rc=
+
+dn: uid=user2,ou=Bucket1,ou=Users,dc=test,dc=redhat,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+cn: User Two
+sn: Two
+uid: user2
+uidNumber: 1002
+gidNumber: 1002
+homeDirectory: /home/user2
+userPassword: {SSHA}hUO/oDoFjJydEhTkXp3XK3dL6rc=
+
+# Bucket 2 Users
+dn: uid=user3,ou=Bucket2,ou=Users,dc=test,dc=redhat,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+cn: User Three
+sn: Three
+uid: user3
+uidNumber: 2001
+gidNumber: 2001
+homeDirectory: /home/user3
+userPassword: {SSHA}hUO/oDoFjJydEhTkXp3XK3dL6rc=
+
+dn: uid=user4,ou=Bucket2,ou=Users,dc=test,dc=redhat,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+cn: User Four
+sn: Four
+uid: user4
+uidNumber: 2002
+gidNumber: 2002
+homeDirectory: /home/user4
+userPassword: {SSHA}hUO/oDoFjJydEhTkXp3XK3dL6rc=
+
+# Bucket 3 Users
+dn: uid=user5,ou=Bucket3,ou=Users,dc=test,dc=redhat,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+cn: User Five
+sn: Five
+uid: user5
+uidNumber: 3001
+gidNumber: 3001
+homeDirectory: /home/user5
+userPassword: {SSHA}hUO/oDoFjJydEhTkXp3XK3dL6rc=
+
+dn: uid=user6,ou=Bucket3,ou=Users,dc=test,dc=redhat,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+cn: User Six
+sn: Six
+uid: user6
+uidNumber: 3002
+gidNumber: 3002
+homeDirectory: /home/user6
+userPassword: {SSHA}hUO/oDoFjJydEhTkXp3XK3dL6rc=

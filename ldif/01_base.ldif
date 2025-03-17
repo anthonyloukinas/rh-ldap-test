@@ -1,0 +1,20 @@
+dn: dc=test,dc=redhat,dc=com
+objectClass: top
+objectClass: domain
+dc: test
+
+dn: ou=Users,dc=test,dc=redhat,dc=com
+objectClass: organizationalUnit
+ou: Users
+
+dn: ou=Bucket1,ou=Users,dc=test,dc=redhat,dc=com
+objectClass: organizationalUnit
+ou: Bucket1
+
+dn: ou=Bucket2,ou=Users,dc=test,dc=redhat,dc=com
+objectClass: organizationalUnit
+ou: Bucket2
+
+dn: ou=Bucket3,ou=Users,dc=test,dc=redhat,dc=com
+objectClass: organizationalUnit
+ou: Bucket3
